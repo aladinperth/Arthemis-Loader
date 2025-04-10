@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euleon</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        .container {
+            width: 500px;
+            height: 300px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 4px;
+            background: linear-gradient(to bottom, #1E1E1E, #121212);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            padding: 10px;
+            border-bottom: 1px solid #333333;
+            background: linear-gradient(to bottom, #1A1A1A, #161616);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .title {
+            color: #CCCCCC;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100% - 30px - 60px);
+        }
+        
+        .welcome {
+            font-size: 42px;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .time, .date {
+            color: #CCCCCC;
+            margin: 10px 0;
+        }
+        
+        .time {
+            font-size: 16px;
+        }
+        
+        .date {
+            font-size: 14px;
+        }
+        
+        .download-button {
+            width: 300px;
+            padding: 10px 0;
+            margin: 20px 0;
+            background: linear-gradient(to right, white, #CCCCCC);
+            color: #1E1E1E;
+            border: none;
+            border-radius: 2px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Euleon</div>
+        </div>
+        
+        <div class="content">
+            <div class="welcome">Welcome</div>
+            <div class="time" id="timeDisplay"></div>
+        </div>
+        
+        <div class="date" id="dateDisplay"></div>
+        <button class="download-button" id="downloadButton">Download</button>
+    </div>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            
+            document.getElementById('timeDisplay').textContent = now.toLocaleTimeString(undefined, timeOptions);
+            document.getElementById('dateDisplay').textContent = now.toLocaleDateString(undefined, dateOptions);
+        }
+        
+        updateDateTime();
+        
+        setInterval(updateDateTime, 1000);
+        
+        document.getElementById('downloadButton').addEventListener('click', function() {
+            alert('Download button clicked');
+        });
+    </script>
+</body>
+</html>
