@@ -13,7 +13,7 @@
             width: 100%;
             font-family: 'Segoe UI', Arial, sans-serif;
             overflow: hidden;
-            background: white;
+            background: #121212;
         }
         
         .container {
@@ -27,6 +27,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
+            border: 1px solid #333333;
         }
         
         .header {
@@ -56,26 +57,34 @@
             font-size: 42px;
             color: white;
             margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
         }
         
         .time, .date {
             color: #CCCCCC;
             margin: 10px 0;
+            opacity: 0;
         }
         
         .time {
             font-size: 16px;
+            animation: fadeIn 0.8s ease 0.3s forwards;
         }
         
         .date {
             font-size: 14px;
             text-align: center;
+            animation: fadeIn 0.8s ease 0.6s forwards;
         }
         
         .download-container {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease 0.9s forwards;
         }
         
         .download-button {
@@ -93,26 +102,90 @@
         
         .download-button:hover {
             background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .code-display {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 400px;
-            height: 300px;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 600px;
+            height: 400px;
             background-color: #1E1E1E;
             z-index: 1000;
             display: none;
             border-radius: 4px;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .code-display.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
         
         .editor-container {
             width: 100%;
-            height: 100%;
+            height: calc(100% - 40px);
+        }
+        
+        .editor-header {
+            height: 40px;
+            background-color: #252526;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .editor-title {
+            color: #CCCCCC;
+            font-size: 14px;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .editor-button {
+            background-color: #333;
+            color: #CCCCCC;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .editor-button:hover {
+            background-color: #444;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -134,6 +207,14 @@
     </div>
     
     <div class="code-display" id="codeDisplay">
+        <div class="editor-header">
+            <div class="editor-title">loader.lua</div>
+            <div class="editor-actions">
+                <button class="editor-button" id="rawButton">Raw</button>
+                <button class="editor-button" id="downloadCodeButton">Download</button>
+                <button class="editor-button" id="closeButton">Close</button>
+            </div>
+        </div>
         <div class="editor-container" id="editorContainer"></div>
     </div>
 
@@ -151,20 +232,46 @@
         
         setInterval(updateDateTime, 1000);
         
+        const codeUrl = 'https://raw.githubusercontent.com/aladinperth/Euleon/refs/heads/main/loader.lua';
+        let codeContent = '';
+        
         document.getElementById('downloadButton').addEventListener('click', function() {
-            document.getElementById('codeDisplay').style.display = 'block';
+            const codeDisplay = document.getElementById('codeDisplay');
+            codeDisplay.style.display = 'block';
+            
+            setTimeout(() => {
+                codeDisplay.classList.add('visible');
+            }, 10);
+            
             setupEditor();
         });
         
-        document.addEventListener('click', function(event) {
+        document.getElementById('closeButton').addEventListener('click', function() {
             const codeDisplay = document.getElementById('codeDisplay');
-            const downloadButton = document.getElementById('downloadButton');
+            codeDisplay.classList.remove('visible');
             
-            if (codeDisplay.style.display === 'block' && 
-                !codeDisplay.contains(event.target) && 
-                event.target !== downloadButton) {
+            setTimeout(() => {
                 codeDisplay.style.display = 'none';
-            }
+            }, 300);
+        });
+        
+        document.getElementById('rawButton').addEventListener('click', function() {
+            window.open(codeUrl, '_blank');
+        });
+        
+        document.getElementById('downloadCodeButton').addEventListener('click', function() {
+            if (!codeContent) return;
+            
+            const blob = new Blob([codeContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'loader.lua';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         });
         
         let editorInitialized = false;
@@ -174,9 +281,11 @@
             
             require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
             require(['vs/editor/editor.main'], function() {
-                fetch('https://raw.githubusercontent.com/aladinperth/Euleon/refs/heads/main/loader.lua')
+                fetch(codeUrl)
                     .then(response => response.text())
                     .then(data => {
+                        codeContent = data;
+                        
                         monaco.editor.defineTheme('euleonTheme', {
                             base: 'vs-dark',
                             inherit: true,
@@ -197,13 +306,9 @@
                             scrollBeyondLastLine: false,
                             automaticLayout: true,
                             fontSize: 12,
-                            lineNumbers: 'off',
-                            folding: false,
-                            contextmenu: false,
-                            scrollbar: {
-                                vertical: 'hidden',
-                                horizontal: 'hidden'
-                            }
+                            lineNumbers: 'on',
+                            folding: true,
+                            contextmenu: false
                         });
                         
                         editorInitialized = true;
