@@ -93,6 +93,53 @@
         .download-button:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
+        
+        .code-display {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 1000;
+            overflow: auto;
+        }
+        
+        .code-content {
+            background-color: #1E1E1E;
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 5px;
+            color: #CCCCCC;
+            font-family: 'Consolas', 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .code-title {
+            font-size: 18px;
+            color: white;
+        }
+        
+        .code-close {
+            background: none;
+            border: none;
+            color: #CCCCCC;
+            cursor: pointer;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -111,8 +158,19 @@
             <button class="download-button" id="downloadButton">Download</button>
         </div>
     </div>
+    
+    <div class="code-display" id="codeDisplay">
+        <div class="code-content">
+            <div class="code-header">
+                <div class="code-title">loader.lua</div>
+                <button class="code-close" id="closeCode">×</button>
+            </div>
+            <pre id="codeText"></pre>
+        </div>
+    </div>
 
     <script>
+        // Update time and date
         function updateDateTime() {
             const now = new Date();
             const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
@@ -122,12 +180,46 @@
             document.getElementById('dateDisplay').textContent = now.toLocaleDateString(undefined, dateOptions);
         }
         
+        // Initial update
         updateDateTime();
         
+        // Update every second
         setInterval(updateDateTime, 1000);
         
+        // Lua code content
+        const luaCode = `-- Euleon Loader
+-- https://github.com/aladinperth/Euleon
+
+local function getInfo()
+    return {
+        name = "Euleon",
+        version = "1.0.0",
+        author = "aladinperth"
+    }
+end
+
+local function load()
+    print("Loading Euleon...")
+    -- Implementation details
+    return true
+end
+
+return {
+    getInfo = getInfo,
+    load = load
+}`;
+        
+        // Load code into display
+        document.getElementById('codeText').textContent = luaCode;
+        
+        // Show code on download button click
         document.getElementById('downloadButton').addEventListener('click', function() {
-            alert('Download button clicked');
+            document.getElementById('codeDisplay').style.display = 'block';
+        });
+        
+        // Hide code on close
+        document.getElementById('closeCode').addEventListener('click', function() {
+            document.getElementById('codeDisplay').style.display = 'none';
         });
     </script>
 </body>
