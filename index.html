@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Euleon</title>
+    <title>Arthemis</title>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
     <style>
         body, html {
@@ -44,6 +44,7 @@
             justify-content: center;
             align-items: center;
             flex-grow: 1;
+            padding: 20px;
         }
         
         .welcome {
@@ -53,12 +54,14 @@
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.8s ease forwards;
+            text-align: center;
         }
         
         .time, .date {
             color: #CCCCCC;
             margin: 15px 0;
             opacity: 0;
+            text-align: center;
         }
         
         .time {
@@ -68,63 +71,19 @@
         
         .date {
             font-size: 20px;
-            text-align: center;
             animation: fadeIn 0.8s ease 0.6s forwards;
         }
         
-        .download-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 40px;
-            margin-bottom: 40px;
+        .code-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 500px;
+            margin: 30px auto;
             opacity: 0;
             animation: fadeIn 0.8s ease 0.9s forwards;
-        }
-        
-        .download-button {
-            width: 400px;
-            padding: 15px 0;
-            background-color: transparent;
-            color: #CCCCCC;
-            border: 1px solid #333333;
-            border-radius: 2px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .download-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .code-display {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            width: 800px;
-            height: 600px;
-            background-color: #1E1E1E;
-            z-index: 1000;
-            display: none;
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .code-display.visible {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        
-        .editor-container {
-            width: 100%;
-            height: calc(100% - 40px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .editor-header {
@@ -144,22 +103,28 @@
         
         .editor-actions {
             display: flex;
-            gap: 15px;
+            gap: 10px;
         }
         
         .editor-button {
             background-color: #333;
             color: #CCCCCC;
             border: none;
-            padding: 8px 15px;
+            padding: 8px 12px;
             border-radius: 3px;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
         
         .editor-button:hover {
             background-color: #444;
+        }
+        
+        .editor-container {
+            width: 100%;
+            height: calc(100% - 40px);
         }
         
         @keyframes fadeIn {
@@ -181,35 +146,75 @@
                 transform: translateY(0);
             }
         }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .welcome {
+                font-size: 48px;
+            }
+            
+            .time {
+                font-size: 20px;
+            }
+            
+            .date {
+                font-size: 16px;
+            }
+            
+            .code-container {
+                height: 400px;
+            }
+            
+            .editor-button {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .welcome {
+                font-size: 36px;
+            }
+            
+            .editor-actions {
+                gap: 5px;
+            }
+            
+            .editor-button {
+                padding: 5px 6px;
+                font-size: 11px;
+            }
+            
+            .code-container {
+                height: 350px;
+                width: 95%;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="title">Euleon</div>
+            <div class="title">Arthemis</div>
         </div>
         
         <div class="content">
             <div class="welcome">Welcome</div>
             <div class="time" id="timeDisplay"></div>
             <div class="date" id="dateDisplay"></div>
-        </div>
-        
-        <div class="download-container">
-            <button class="download-button" id="downloadButton">Download</button>
-        </div>
-    </div>
-    
-    <div class="code-display" id="codeDisplay">
-        <div class="editor-header">
-            <div class="editor-title">loader.lua</div>
-            <div class="editor-actions">
-                <button class="editor-button" id="rawButton">Raw</button>
-                <button class="editor-button" id="downloadCodeButton">Download</button>
-                <button class="editor-button" id="closeButton">Close</button>
+            
+            <div class="code-container">
+                <div class="editor-header">
+                    <div class="editor-title">loader.lua</div>
+                    <div class="editor-actions">
+                        <button class="editor-button" id="copyButton">Copy</button>
+                        <button class="editor-button" id="rawButton">Raw</button>
+                        <button class="editor-button" id="downloadCodeButton">Download</button>
+                    </div>
+                </div>
+                <div class="editor-container" id="editorContainer"></div>
             </div>
         </div>
-        <div class="editor-container" id="editorContainer"></div>
     </div>
 
     <script>
@@ -223,31 +228,10 @@
         }
         
         updateDateTime();
-        
         setInterval(updateDateTime, 1000);
         
         const codeUrl = 'https://raw.githubusercontent.com/aladinperth/Euleon/refs/heads/main/loader.lua';
         let codeContent = '';
-        
-        document.getElementById('downloadButton').addEventListener('click', function() {
-            const codeDisplay = document.getElementById('codeDisplay');
-            codeDisplay.style.display = 'block';
-            
-            setTimeout(() => {
-                codeDisplay.classList.add('visible');
-            }, 10);
-            
-            setupEditor();
-        });
-        
-        document.getElementById('closeButton').addEventListener('click', function() {
-            const codeDisplay = document.getElementById('codeDisplay');
-            codeDisplay.classList.remove('visible');
-            
-            setTimeout(() => {
-                codeDisplay.style.display = 'none';
-            }, 300);
-        });
         
         document.getElementById('rawButton').addEventListener('click', function() {
             window.open(codeUrl, '_blank');
@@ -268,51 +252,66 @@
             URL.revokeObjectURL(url);
         });
         
-        let editorInitialized = false;
-        
-        function setupEditor() {
-            if (editorInitialized) return;
+        document.getElementById('copyButton').addEventListener('click', function() {
+            if (!codeContent) return;
             
-            require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
-            require(['vs/editor/editor.main'], function() {
-                fetch(codeUrl)
-                    .then(response => response.text())
-                    .then(data => {
-                        codeContent = data;
-                        
-                        monaco.editor.defineTheme('euleonTheme', {
-                            base: 'vs-dark',
-                            inherit: true,
-                            rules: [],
-                            colors: {
-                                'editor.background': '#1E1E1E'
-                            }
-                        });
-                        
-                        monaco.languages.register({ id: 'lua' });
-                        
-                        const editor = monaco.editor.create(document.getElementById('editorContainer'), {
-                            value: data,
-                            language: 'lua',
-                            theme: 'euleonTheme',
-                            readOnly: true,
-                            minimap: { enabled: false },
-                            scrollBeyondLastLine: false,
-                            automaticLayout: true,
-                            fontSize: 14,
-                            lineNumbers: 'on',
-                            folding: true,
-                            contextmenu: false
-                        });
-                        
-                        editorInitialized = true;
-                    })
-                    .catch(error => {
-                        document.getElementById('editorContainer').textContent = 'Error loading code';
-                        console.error('Error fetching code:', error);
+            navigator.clipboard.writeText(codeContent)
+                .then(() => {
+                    const copyBtn = document.getElementById('copyButton');
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        });
+        
+        // Initialize Monaco Editor
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
+        require(['vs/editor/editor.main'], function() {
+            fetch(codeUrl)
+                .then(response => response.text())
+                .then(data => {
+                    codeContent = data;
+                    
+                    monaco.editor.defineTheme('arthemisTheme', {
+                        base: 'vs-dark',
+                        inherit: true,
+                        rules: [],
+                        colors: {
+                            'editor.background': '#1E1E1E'
+                        }
                     });
-            });
-        }
+                    
+                    monaco.languages.register({ id: 'lua' });
+                    
+                    const editor = monaco.editor.create(document.getElementById('editorContainer'), {
+                        value: data,
+                        language: 'lua',
+                        theme: 'arthemisTheme',
+                        readOnly: true,
+                        minimap: { enabled: false },
+                        scrollBeyondLastLine: false,
+                        automaticLayout: true,
+                        fontSize: 14,
+                        lineNumbers: 'on',
+                        folding: true,
+                        contextmenu: false
+                    });
+                    
+                    // Handle window resize for responsive editor
+                    window.addEventListener('resize', function() {
+                        editor.layout();
+                    });
+                })
+                .catch(error => {
+                    document.getElementById('editorContainer').textContent = 'Error loading code';
+                    console.error('Error fetching code:', error);
+                });
+        });
     </script>
 </body>
 </html>
