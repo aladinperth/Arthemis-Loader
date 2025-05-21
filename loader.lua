@@ -33,6 +33,11 @@ getgenv().tracing = {
     
     prediction = {
         amount = 0;
+        distance_scaling = {
+            toggled = false;
+            min = 1;
+            max = 10;
+        };
     };
     
     aiming = {
