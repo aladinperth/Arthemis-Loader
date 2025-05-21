@@ -7,9 +7,11 @@ Point Modes: "Generic", "Center", "Scalar", "Full", "Partial", "Root"
 ]]
 
 getgenv().arthemis = {
-    version = "1.0";
+   version = "1.0";
+   license = "";
+   intro = true;
 };
- 
+
 getgenv().checks = {
     ko = false;
     wall = false;
