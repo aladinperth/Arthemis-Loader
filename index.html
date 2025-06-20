@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>ONYX Loader</title>
+   <title>ONYX</title>
    <style>
        * {
            margin: 0;
@@ -12,74 +12,179 @@
        }
 
        body {
-           background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0c0c0c 100%);
-           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           background: #1a1a1a;
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+           color: #ffffff;
            min-height: 100vh;
-           overflow-x: hidden;
            position: relative;
+           overflow-x: hidden;
        }
 
-       body::before {
-           content: '';
-           position: absolute;
+       .stars {
+           position: fixed;
            top: 0;
            left: 0;
-           right: 0;
-           bottom: 0;
-           background: 
-               radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-               radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-               radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
-           animation: gradientShift 8s ease-in-out infinite;
+           width: 100%;
+           height: 100%;
            pointer-events: none;
+           z-index: 0;
        }
 
-       @keyframes gradientShift {
-           0%, 100% { opacity: 0.8; transform: scale(1); }
-           50% { opacity: 0.4; transform: scale(1.1); }
+       .star {
+           position: absolute;
+           width: 2px;
+           height: 2px;
+           background: white;
+           border-radius: 50%;
+           animation: twinkle 3s infinite;
+       }
+
+       @keyframes twinkle {
+           0%, 100% { opacity: 0.3; transform: scale(1); }
+           50% { opacity: 1; transform: scale(1.2); }
        }
 
        .container {
+           position: relative;
+           z-index: 1;
+           padding: 40px 20px;
+           min-height: 100vh;
+           display: flex;
+           flex-direction: column;
+       }
+
+       .header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 60px;
+           animation: slideInDown 0.8s ease-out;
+       }
+
+       @keyframes slideInDown {
+           from {
+               opacity: 0;
+               transform: translateY(-30px);
+           }
+           to {
+               opacity: 1;
+               transform: translateY(0);
+           }
+       }
+
+       .logo {
+           font-size: 1.5rem;
+           font-weight: 600;
+           letter-spacing: 2px;
+       }
+
+       .buttons {
+           display: flex;
+           gap: 12px;
+           animation: slideInRight 0.8s ease-out 0.2s both;
+       }
+
+       @keyframes slideInRight {
+           from {
+               opacity: 0;
+               transform: translateX(30px);
+           }
+           to {
+               opacity: 1;
+               transform: translateX(0);
+           }
+       }
+
+       .btn {
+           padding: 8px 16px;
+           border-radius: 6px;
+           border: none;
+           font-size: 0.875rem;
+           font-weight: 500;
+           cursor: pointer;
+           transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+           position: relative;
+           overflow: hidden;
+           text-decoration: none;
+           display: inline-block;
+       }
+
+       .btn::before {
+           content: '';
+           position: absolute;
+           top: 0;
+           left: -100%;
+           width: 100%;
+           height: 100%;
+           background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+           transition: left 0.6s;
+       }
+
+       .btn:hover::before {
+           left: 100%;
+       }
+
+       .btn:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+       }
+
+       .btn:active {
+           transform: translateY(0);
+       }
+
+       .discord-btn {
+           background: #5865f2;
+           color: white;
+       }
+
+       .discord-btn:hover {
+           background: #4752c4;
+           box-shadow: 0 4px 12px rgba(88,101,242,0.4);
+       }
+
+       .copy-btn {
+           background: #404040;
+           color: white;
+       }
+
+       .copy-btn:hover {
+           background: #505050;
+       }
+
+       .raw-btn {
+           background: #404040;
+           color: white;
+       }
+
+       .raw-btn:hover {
+           background: #505050;
+       }
+
+       .download-btn {
+           background: #404040;
+           color: white;
+       }
+
+       .download-btn:hover {
+           background: #505050;
+       }
+
+       .main-content {
+           flex: 1;
            display: flex;
            flex-direction: column;
            align-items: center;
            justify-content: center;
-           min-height: 100vh;
-           padding: 20px;
-           position: relative;
-           z-index: 1;
-       }
-
-       .logo {
-           font-size: 4rem;
-           font-weight: 900;
-           background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffd93d);
-           background-size: 300% 300%;
-           -webkit-background-clip: text;
-           background-clip: text;
-           -webkit-text-fill-color: transparent;
-           animation: rainbowText 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
-           margin-bottom: 2rem;
-           text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-           letter-spacing: 8px;
-       }
-
-       @keyframes rainbowText {
-           0%, 100% { background-position: 0% 50%; }
-           50% { background-position: 100% 50%; }
-       }
-
-       @keyframes glow {
-           from { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)); }
-           to { filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6)); }
-       }
-
-       .subtitle {
-           color: rgba(255, 255, 255, 0.7);
-           font-size: 1.2rem;
-           margin-bottom: 3rem;
-           animation: fadeInUp 1s ease-out 0.5s both;
            text-align: center;
+           margin-top: -100px;
+       }
+
+       .welcome {
+           font-size: 4rem;
+           font-weight: 300;
+           margin-bottom: 20px;
+           animation: fadeInUp 1s ease-out 0.4s both;
        }
 
        @keyframes fadeInUp {
@@ -93,263 +198,250 @@
            }
        }
 
-       .loader-container {
-           position: relative;
-           width: 400px;
-           height: 8px;
-           background: rgba(255, 255, 255, 0.1);
-           border-radius: 20px;
-           margin-bottom: 3rem;
-           overflow: hidden;
+       .time {
+           font-size: 1.5rem;
+           color: #cccccc;
+           margin-bottom: 8px;
+           animation: fadeInUp 1s ease-out 0.6s both;
+       }
+
+       .date {
+           font-size: 1rem;
+           color: #888888;
+           margin-bottom: 60px;
+           animation: fadeInUp 1s ease-out 0.8s both;
+       }
+
+       .code-section {
+           width: 100%;
+           max-width: 800px;
+           background: rgba(30, 30, 30, 0.8);
+           border-radius: 12px;
+           padding: 0;
            backdrop-filter: blur(10px);
-           border: 1px solid rgba(255, 255, 255, 0.2);
+           border: 1px solid rgba(255, 255, 255, 0.1);
+           animation: fadeInUp 1s ease-out 1s both;
+           transition: all 0.3s ease;
        }
 
-       .loader-bar {
-           position: absolute;
-           top: 0;
-           left: 0;
-           height: 100%;
-           background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-           background-size: 200% 100%;
-           border-radius: 20px;
-           width: 0%;
-           animation: loading 3s ease-in-out infinite, shimmer 2s linear infinite;
-           box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+       .code-section:hover {
+           transform: translateY(-2px);
+           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+           border-color: rgba(255, 255, 255, 0.2);
        }
 
-       @keyframes loading {
-           0% { width: 0%; }
-           50% { width: 70%; }
-           100% { width: 100%; }
+       .code-header {
+           display: flex;
+           align-items: center;
+           padding: 12px 16px;
+           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+           background: rgba(40, 40, 40, 0.5);
+           border-radius: 12px 12px 0 0;
        }
 
-       @keyframes shimmer {
-           0% { background-position: -200% 0; }
-           100% { background-position: 200% 0; }
-       }
-
-       .loader-text {
-           color: rgba(255, 255, 255, 0.8);
-           font-size: 0.9rem;
-           text-align: center;
-           margin-bottom: 2rem;
+       .file-indicator {
+           width: 8px;
+           height: 8px;
+           background: #00ff88;
+           border-radius: 50%;
+           margin-right: 8px;
            animation: pulse 2s ease-in-out infinite;
        }
 
        @keyframes pulse {
-           0%, 100% { opacity: 0.6; }
-           50% { opacity: 1; }
+           0%, 100% { opacity: 1; }
+           50% { opacity: 0.5; }
        }
 
-       .buttons {
-           display: flex;
-           gap: 20px;
-           flex-wrap: wrap;
-           justify-content: center;
-           animation: fadeInUp 1s ease-out 1s both;
+       .file-name {
+           font-size: 0.875rem;
+           color: #cccccc;
        }
 
-       .btn {
-           background: rgba(255, 255, 255, 0.1);
-           border: 1px solid rgba(255, 255, 255, 0.3);
-           color: white;
-           padding: 12px 24px;
-           border-radius: 25px;
-           text-decoration: none;
-           font-size: 0.9rem;
-           font-weight: 600;
-           transition: all 0.3s ease;
-           backdrop-filter: blur(10px);
-           position: relative;
-           overflow: hidden;
-           cursor: pointer;
+       .monaco-editor {
+           height: 400px;
+           border-radius: 0 0 12px 12px;
        }
 
-       .btn::before {
-           content: '';
-           position: absolute;
-           top: 0;
-           left: -100%;
-           width: 100%;
-           height: 100%;
-           background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-           transition: left 0.5s;
-       }
-
-       .btn:hover::before {
-           left: 100%;
-       }
-
-       .btn:hover {
-           transform: translateY(-3px);
-           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-           border-color: rgba(255, 255, 255, 0.5);
-           background: rgba(255, 255, 255, 0.2);
-       }
-
-       .btn:active {
-           transform: translateY(-1px);
-       }
-
-       .floating-particles {
-           position: absolute;
-           width: 100%;
-           height: 100%;
-           overflow: hidden;
-           pointer-events: none;
-       }
-
-       .particle {
-           position: absolute;
-           width: 4px;
-           height: 4px;
-           background: rgba(255, 255, 255, 0.6);
-           border-radius: 50%;
-           animation: float 15s linear infinite;
-       }
-
-       @keyframes float {
-           0% {
-               transform: translateY(100vh) rotate(0deg);
-               opacity: 0;
-           }
-           10% {
-               opacity: 1;
-           }
-           90% {
-               opacity: 1;
-           }
-           100% {
-               transform: translateY(-100px) rotate(360deg);
-               opacity: 0;
-           }
-       }
-
-       .discord-btn {
-           background: linear-gradient(45deg, #5865f2, #7289da);
-       }
-
-       .copy-btn {
-           background: linear-gradient(45deg, #667eea, #764ba2);
-       }
-
-       .raw-btn {
-           background: linear-gradient(45deg, #ffecd2, #fcb69f);
-           color: #333;
-       }
-
-       .download-btn {
-           background: linear-gradient(45deg, #ff9a9e, #fecfef);
-       }
-
-       @media (max-width: 768px) {
-           .logo {
-               font-size: 2.5rem;
-               letter-spacing: 4px;
-           }
-           
-           .loader-container {
-               width: 300px;
-           }
-           
-           .buttons {
-               flex-direction: column;
-               align-items: center;
-           }
-           
-           .btn {
-               width: 200px;
-               text-align: center;
-           }
-       }
-
-       .copied-text {
+       .copied-notification {
            position: fixed;
            top: 20px;
            right: 20px;
            background: rgba(255, 255, 255, 0.9);
            color: #333;
-           padding: 10px 20px;
-           border-radius: 25px;
-           font-weight: 600;
+           padding: 12px 20px;
+           border-radius: 8px;
+           font-weight: 500;
            opacity: 0;
            transform: translateX(100px);
-           transition: all 0.3s ease;
+           transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
            z-index: 1000;
-           backdrop-filter: blur(10px);
        }
 
-       .copied-text.show {
+       .copied-notification.show {
            opacity: 1;
            transform: translateX(0);
+       }
+
+       @media (max-width: 768px) {
+           .welcome {
+               font-size: 2.5rem;
+           }
+           
+           .buttons {
+               flex-wrap: wrap;
+               justify-content: center;
+           }
+           
+           .code-section {
+               margin: 0 10px;
+           }
+           
+           .header {
+               flex-direction: column;
+               gap: 20px;
+               text-align: center;
+           }
        }
    </style>
 </head>
 <body>
-   <div class="floating-particles"></div>
+   <div class="stars"></div>
    
    <div class="container">
-       <h1 class="logo">ONYX</h1>
-       <p class="subtitle">Ultimate Loader Experience</p>
-       
-       <div class="loader-container">
-           <div class="loader-bar"></div>
+       <div class="header">
+           <div class="logo">ONYX</div>
+           <div class="buttons">
+               <a href="#" class="btn discord-btn">Discord</a>
+               <button class="btn copy-btn" onclick="copyCode()">Copy</button>
+               <a href="https://raw.githubusercontent.com/aladinperth/onyx-loader/refs/heads/main/loader.lua" target="_blank" class="btn raw-btn">Raw</a>
+               <a href="https://raw.githubusercontent.com/aladinperth/onyx-loader/refs/heads/main/loader.lua" download="loader.lua" class="btn download-btn">Download</a>
+           </div>
        </div>
-       
-       <div class="loader-text">Loading awesome content...</div>
-       
-       <div class="buttons">
-           <a href="#" class="btn discord-btn">Discord</a>
-           <button class="btn copy-btn" onclick="copyToClipboard()">Copy</button>
-           <a href="#" class="btn raw-btn">Raw</a>
-           <a href="#" class="btn download-btn">Download</a>
+
+       <div class="main-content">
+           <h1 class="welcome">Welcome</h1>
+           <div class="time" id="currentTime">01:15:21 PM</div>
+           <div class="date" id="currentDate">Wednesday, June 18, 2025</div>
+
+           <div class="code-section">
+               <div class="code-header">
+                   <div class="file-indicator"></div>
+                   <span class="file-name">loader.lua</span>
+               </div>
+               <div id="editor" class="monaco-editor"></div>
+           </div>
        </div>
    </div>
 
-   <div class="copied-text" id="copiedText">Copied!</div>
+   <div class="copied-notification" id="copiedNotification">Copied</div>
 
+   <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
    <script>
-       function createParticles() {
-           const container = document.querySelector('.floating-particles');
-           const particleCount = 50;
+       let editorInstance;
+       let luaCode = '';
+
+       require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' } });
+
+       require(['vs/editor/editor.main'], function () {
+           fetch('https://raw.githubusercontent.com/aladinperth/onyx-loader/refs/heads/main/loader.lua')
+               .then(response => response.text())
+               .then(code => {
+                   luaCode = code;
+                   
+                   editorInstance = monaco.editor.create(document.getElementById('editor'), {
+                       value: code,
+                       language: 'lua',
+                       theme: 'vs-dark',
+                       readOnly: true,
+                       minimap: { enabled: false },
+                       scrollBeyondLastLine: false,
+                       fontSize: 14,
+                       lineNumbers: 'on',
+                       automaticLayout: true,
+                       scrollbar: {
+                           vertical: 'auto',
+                           horizontal: 'auto'
+                       }
+                   });
+               })
+               .catch(error => {
+                   console.error('Error fetching code:', error);
+                   editorInstance = monaco.editor.create(document.getElementById('editor'), {
+                       value: '-- Error loading code from GitHub',
+                       language: 'lua',
+                       theme: 'vs-dark',
+                       readOnly: true,
+                       minimap: { enabled: false }
+                   });
+               });
+       });
+
+       function createStars() {
+           const starsContainer = document.querySelector('.stars');
+           const starCount = 100;
            
-           for (let i = 0; i < particleCount; i++) {
-               const particle = document.createElement('div');
-               particle.className = 'particle';
-               particle.style.left = Math.random() * 100 + '%';
-               particle.style.animationDelay = Math.random() * 15 + 's';
-               particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-               container.appendChild(particle);
+           for (let i = 0; i < starCount; i++) {
+               const star = document.createElement('div');
+               star.className = 'star';
+               star.style.left = Math.random() * 100 + '%';
+               star.style.top = Math.random() * 100 + '%';
+               star.style.animationDelay = Math.random() * 3 + 's';
+               star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+               starsContainer.appendChild(star);
            }
        }
 
-       function copyToClipboard() {
-           const textToCopy = "loader.lua content here";
-           navigator.clipboard.writeText(textToCopy).then(function() {
-               const copiedText = document.getElementById('copiedText');
-               copiedText.classList.add('show');
-               
-               setTimeout(function() {
-                   copiedText.classList.remove('show');
-               }, 2000);
-           }).catch(function(err) {
-               console.error('Could not copy text: ', err);
-           });
+       function updateTime() {
+           const now = new Date();
+           const timeElement = document.getElementById('currentTime');
+           const dateElement = document.getElementById('currentDate');
+           
+           const timeOptions = {
+               hour: '2-digit',
+               minute: '2-digit',
+               second: '2-digit',
+               hour12: true
+           };
+           
+           const dateOptions = {
+               weekday: 'long',
+               year: 'numeric',
+               month: 'long',
+               day: 'numeric'
+           };
+           
+           timeElement.textContent = now.toLocaleTimeString('en-US', timeOptions);
+           dateElement.textContent = now.toLocaleDateString('en-US', dateOptions);
        }
 
-       createParticles();
+       function copyCode() {
+           if (luaCode) {
+               navigator.clipboard.writeText(luaCode).then(() => {
+                   const notification = document.getElementById('copiedNotification');
+                   notification.classList.add('show');
+                   
+                   setTimeout(() => {
+                       notification.classList.remove('show');
+                   }, 2000);
+               }).catch(err => {
+                   console.error('Failed to copy: ', err);
+               });
+           }
+       }
 
-       const observer = new IntersectionObserver((entries) => {
-           entries.forEach(entry => {
-               if (entry.isIntersecting) {
-                   entry.target.style.animationPlayState = 'running';
-               }
-           });
-       });
+       createStars();
+       updateTime();
+       setInterval(updateTime, 1000);
 
        document.querySelectorAll('.btn').forEach(btn => {
-           observer.observe(btn);
+           btn.addEventListener('mouseenter', function() {
+               this.style.transform = 'translateY(-2px)';
+           });
+           
+           btn.addEventListener('mouseleave', function() {
+               this.style.transform = 'translateY(0)';
+           });
        });
    </script>
 </body>
